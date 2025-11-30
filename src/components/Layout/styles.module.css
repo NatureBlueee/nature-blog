@@ -1,0 +1,17 @@
+/**
+ * Layout 样式 - 占位符实现
+ */
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  max-width: var(--max-width-container, 1200px);
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}

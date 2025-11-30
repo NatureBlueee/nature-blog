@@ -1,0 +1,39 @@
+/**
+ * 首页样式 - 占位符实现
+ */
+
+.container {
+  max-width: var(--max-width-content, 800px);
+  margin: 0 auto;
+}
+
+.hero {
+  padding: var(--spacing-3xl, 4rem) 0;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border, #e0e0dc);
+  margin-bottom: var(--spacing-2xl, 3rem);
+}
+
+.title {
+  font-size: var(--font-size-4xl, 2.25rem);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md, 1rem);
+  color: var(--color-text, #2b2b2b);
+}
+
+.description {
+  font-size: var(--font-size-lg, 1.125rem);
+  color: var(--color-text-secondary, #666);
+  line-height: var(--line-height-relaxed, 1.75);
+}
+
+.section {
+  margin-bottom: var(--spacing-2xl, 3rem);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-xl, 1.25rem);
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  color: var(--color-text, #2b2b2b);
+}

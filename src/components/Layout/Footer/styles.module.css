@@ -1,0 +1,37 @@
+/**
+ * Footer 样式 - 占位符实现
+ */
+
+.footer {
+  border-top: 1px solid var(--color-border, #e0e0dc);
+  padding: 2rem 0;
+  margin-top: auto;
+}
+
+.container {
+  max-width: var(--max-width-container, 1200px);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.copyright {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #666);
+  margin: 0 0 0.5rem 0;
+}
+
+.powered {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary, #999);
+  margin: 0;
+}
+
+.link {
+  color: var(--color-accent, #b03a2e);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

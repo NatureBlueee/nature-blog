@@ -1,0 +1,15 @@
+/**
+ * Loading 样式 - 占位符实现
+ */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+}
+
+.text {
+  color: var(--color-text-secondary, #666);
+  font-size: 1rem;
+}

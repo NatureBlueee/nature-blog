@@ -1,0 +1,24 @@
+/**
+ * 文章列表页样式 - 占位符实现
+ */
+
+.container {
+  max-width: var(--max-width-content, 800px);
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--spacing-2xl, 3rem);
+}
+
+.title {
+  font-size: var(--font-size-3xl, 1.875rem);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm, 0.5rem);
+  color: var(--color-text, #2b2b2b);
+}
+
+.subtitle {
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-text-secondary, #666);
+}

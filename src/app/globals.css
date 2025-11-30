@@ -1,0 +1,535 @@
+/**
+ * 全局样式
+ *
+ * 宋代美学 + 瑞士国际主义
+ */
+
+:root {
+  /* === 表世界：宋色谱系 === */
+  --bg-paper: #f9f9f9;
+  --ink-main: #111111;
+  --ink-sub: #666666;
+  --border-line: rgba(0, 0, 0, 0.06);
+  --cinnabar: #cc281c;
+
+  /* === 里世界：鸦青 & 月白 === */
+  --bg-night: #1a1c1e;
+  --text-moon: #d6ecf0;
+  --gold-dust: #bfa37c;
+
+  /* === 布局变量 === */
+  --void-width: 68%;
+  --content-width: 32%;
+
+  /* 字体 */
+  --font-serif: "Noto Serif SC", "Songti SC", serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  /* 新增变量 */
+  --bg-silk: #e6e4d5;
+  --gold-mud: #c5a059;
+
+  /* === 优化变量：表世界 === */
+  --grid-color: rgba(0, 0, 0, 0.03); /* 极淡的网格色 */
+}
+
+/* === 优化工具类：不可见之网 (Invisible Grid) === */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  /* 仅在左侧留白区显示，无需额外定位 */
+}
+
+/* === 优化工具类：金石气排印 (Architectural Typography) === */
+.text-architectural {
+  letter-spacing: 0.8em; /* 极宽字距 */
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.2); /* 墨晕效果 */
+  font-weight: 600; /* 稍重，如碑刻 */
+}
+
+/* === 优化动画：朱砂呼吸 (Cinnabar Pulse) === */
+@keyframes pulse-cinnabar {
+  0%, 100% {
+    opacity: 0.8;
+    height: 60px; /* 原始高度 */
+  }
+  50% {
+    opacity: 1;
+    height: 65px; /* 微弱伸长 */
+  }
+}
+
+.animate-pulse-cinnabar {
+  animation: pulse-cinnabar 4s ease-in-out infinite;
+}
+
+/* === 基础重置 === */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: visible;
+  max-width: 100vw;
+}
+
+/* 隐藏全局滚动条但保持滚动功能 */
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+body {
+  background-color: var(--bg-paper);
+  color: var(--ink-main);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+/* === 噪点质感（全局） === */
+.grain-texture {
+  position: fixed;
+  inset: 0;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 9998;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* === 自定义光标 === */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--cinnabar);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease,
+    border-color 0.3s ease, opacity 0.3s ease;
+  opacity: 0.9;
+  /* 朱砂红光标 - 在任何背景下都可见 */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+body.hovering .custom-cursor {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(204, 40, 28, 0.15);
+  border-color: var(--cinnabar);
+  opacity: 1;
+}
+
+/* === 滚动容器 === */
+.snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+/* === 每一屏 === */
+.screen {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  scroll-snap-align: start;
+  overflow: hidden;
+  display: flex;
+}
+
+/* 表世界 */
+.screen-surface {
+  background-color: var(--bg-paper);
+  color: var(--ink-main);
+}
+
+/* 里世界 */
+.screen-inner {
+  background-color: var(--bg-night);
+  color: var(--text-moon);
+}
+
+/* 地界 (坛城) */
+.screen-ground {
+  background-color: var(--bg-silk);
+  color: var(--ink-main);
+  position: relative;
+}
+
+.silk-texture {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* 铁线描效果 */
+.iron-wire-line {
+  stroke: var(--ink-sub);
+  stroke-width: 1px;
+  fill: none;
+  opacity: 0.15;
+  vector-effect: non-scaling-stroke;
+}
+
+/* 金缮效果 */
+.kintsugi-line {
+  stroke: var(--gold-mud);
+  stroke-width: 1.5px;
+  fill: none;
+  filter: drop-shadow(0 0 2px rgba(197, 160, 89, 0.4));
+}
+
+/* 竖排文字 */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.2em;
+}
+
+/* === 布局系统 === */
+
+/* 左侧：留白区 */
+.void-area {
+  width: var(--void-width);
+  height: 100%;
+  position: relative;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 右侧：内容流 */
+.content-area {
+  width: var(--content-width);
+  height: 100%;
+  overflow-y: auto;
+  padding: 8rem 3rem 8rem 4rem;
+  position: relative;
+  scrollbar-width: none;
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.content-area::-webkit-scrollbar {
+  display: none;
+}
+
+/* 分割线 */
+.divider-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--void-width);
+  width: 1px;
+  background-color: var(--border-line);
+  z-index: 10;
+  transition: left 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 朱砂红点睛 */
+.divider-accent {
+  position: absolute;
+  top: 0;
+  left: var(--void-width);
+  width: 3px;
+  height: 60px;
+  background-color: var(--cinnabar);
+  z-index: 12;
+  transform: translateX(-1px);
+  transition: left 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* === Logo === */
+.logo-vertical {
+  writing-mode: vertical-rl;
+  font-size: 2.5rem;
+  font-weight: 500;
+  letter-spacing: 0.5em;
+  color: var(--ink-main);
+  user-select: none;
+  opacity: 0.9;
+}
+
+/* === 签名区 === */
+.signature-block {
+  position: absolute;
+  bottom: 4rem;
+  left: 4rem;
+}
+
+.signature-name {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--ink-main);
+  margin-bottom: 0.5rem;
+}
+
+.signature-en {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-sub);
+  letter-spacing: 0.1em;
+}
+
+/* === 文章标题交互 === */
+.entry-title {
+  transition: color 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.entry-title:hover {
+  color: var(--cinnabar);
+}
+
+.screen-inner .entry-title:hover {
+  color: var(--gold-dust);
+}
+
+/* === 烟雾效果（里世界） === */
+.smoke-void {
+  position: absolute;
+  bottom: -20%;
+  left: 15%;
+  width: 200px;
+  height: 120%;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(230, 232, 235, 0.08),
+    transparent 70%
+  );
+  filter: url(#smoke-subtle);
+  opacity: 0.8;
+  transform-origin: bottom center;
+  animation: smoke-drift 25s infinite ease-in-out alternate;
+  pointer-events: none;
+}
+
+@keyframes smoke-drift {
+  0% {
+    transform: translateX(0) scale(1) skewX(0deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(20px) scale(1.1) skewX(2deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(-10px) scale(1.2) skewX(-1deg);
+    opacity: 0.5;
+  }
+}
+
+/* 微调版烟雾上升动画 */
+@keyframes smokeRise1 {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes smokeRise2 {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+/* 烟雾分割线 */
+.divider-smoke-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--void-width);
+  width: 60px;
+  transform: translateX(-30px);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.divider-smoke-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(230, 232, 235, 0.5) 20%,
+    rgba(230, 232, 235, 0.2) 80%,
+    transparent 100%
+  );
+  opacity: 0.7;
+  filter: url(#smoke-line-flow);
+}
+
+/* === Drift Layout（乱中有序） === */
+.drift-layout .article-item:nth-child(1) {
+  margin-left: 0;
+}
+.drift-layout .article-item:nth-child(2) {
+  margin-left: 2rem;
+}
+.drift-layout .article-item:nth-child(3) {
+  margin-left: 0.5rem;
+}
+.drift-layout .article-item:nth-child(4) {
+  margin-left: 3rem;
+}
+
+/* === 工具类 === */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.hover-target {
+  /* 光标交互目标 */
+}
+
+/* === 移动端适配 === */
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+
+  .custom-cursor {
+    display: none;
+  }
+
+  .void-area,
+  .divider-line,
+  .divider-accent,
+  .divider-smoke-container,
+  .smoke-void {
+    display: none;
+  }
+
+  .content-area {
+    width: 100%;
+    padding: 4rem 2rem;
+  }
+
+  .drift-layout .article-item:nth-child(n) {
+    margin-left: 0;
+  }
+
+  .snap-container {
+    scroll-snap-type: none;
+  }
+
+  .screen {
+    height: auto;
+    min-height: 100vh;
+    display: block;
+  }
+}
+
+/* === 隐藏类 === */
+.hidden {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .md\:block {
+    display: block;
+  }
+  .md\:flex {
+    display: flex;
+  }
+  .md\:hidden {
+    display: none;
+  }
+}
+
+/* ============================================
+   文章详情页主题系统
+   ============================================ */
+
+/* 文章页容器 - 允许滚动 */
+.article-page {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+/* 表世界主题（默认） */
+.article-page[data-theme="surface"] {
+  --page-bg: #f5f1eb;
+  --page-text: #2c2c2c;
+  --page-text-light: #6b6b6b;
+  --page-text-lighter: #999999;
+  --page-accent: var(--cinnabar);
+  background-color: var(--page-bg);
+  color: var(--page-text);
+}
+
+/* 里世界主题 */
+.article-page[data-theme="inner"] {
+  --page-bg: #1e2428;
+  --page-text: #e8e4dc;
+  --page-text-light: #a8a8a8;
+  --page-text-lighter: #707070;
+  --page-accent: var(--gold-dust);
+  background-color: var(--page-bg);
+  color: var(--page-text);
+}
+
+/* 文章页光标 - 使用主题变量 */
+.article-page .custom-cursor {
+  border-color: var(--page-accent);
+}
+
+.article-page.hovering .custom-cursor {
+  border-color: var(--page-accent);
+  background-color: rgba(204, 40, 28, 0.1);
+}
+
+.article-page[data-theme="inner"].hovering .custom-cursor {
+  background-color: rgba(191, 163, 124, 0.15);
+}
+
+/* 文章页纹理 - 更淡 */
+.article-page .grain-texture {
+  opacity: 0.025;
+}

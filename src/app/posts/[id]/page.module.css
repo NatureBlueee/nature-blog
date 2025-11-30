@@ -1,0 +1,114 @@
+/**
+ * 文章详情页样式
+ */
+
+.article {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.category {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text);
+}
+
+.titleEn {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin-bottom: var(--spacing-md);
+}
+
+.date {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.cover {
+  margin-bottom: var(--spacing-xl);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.coverImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.content {
+  font-size: var(--font-size-base);
+  line-height: 1.8;
+  color: var(--color-text);
+}
+
+.content p {
+  margin-bottom: var(--spacing-md);
+}
+
+.content h2 {
+  font-size: var(--font-size-xl);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.content h3 {
+  font-size: var(--font-size-lg);
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+.content ul,
+.content ol {
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-lg);
+}
+
+.content blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding-left: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.content pre {
+  background: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-bg-secondary);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}

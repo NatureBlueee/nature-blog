@@ -1,0 +1,40 @@
+/**
+ * Header 样式 - 占位符实现
+ */
+
+.header {
+  border-bottom: 1px solid var(--color-border, #e0e0dc);
+  padding: 1rem 0;
+}
+
+.container {
+  max-width: var(--max-width-container, 1200px);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-text, #2b2b2b);
+}
+
+.nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navLink {
+  text-decoration: none;
+  color: var(--color-text-secondary, #666);
+  font-size: 0.95rem;
+  transition: color 0.15s ease;
+}
+
+.navLink:hover {
+  color: var(--color-text, #2b2b2b);
+}

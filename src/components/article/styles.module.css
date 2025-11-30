@@ -1,0 +1,331 @@
+/**
+ * 文章详情样式
+ *
+ * 设计理念：温润、沉浸、干净但有内核
+ */
+
+/* === 文章容器 === */
+.article {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 100px 24px 120px;
+  position: relative;
+}
+
+/* === 文章头部 === */
+.header {
+  margin-bottom: 64px;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 5vw, 34px);
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  color: var(--page-text);
+  letter-spacing: 0.02em;
+}
+
+.titleEn {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--page-text-light);
+  margin: 0 0 24px;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+.date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--page-text-lighter);
+  letter-spacing: 0.15em;
+}
+
+/* === 封面图片 === */
+.cover {
+  margin: 0 0 56px;
+  position: relative;
+}
+
+.coverImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* === 文章正文 === */
+.content {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--page-text);
+}
+
+/* 段落 */
+.content p {
+  margin-bottom: 1.6em;
+}
+
+/* 标题 */
+.content h1,
+.content h2,
+.content h3 {
+  font-weight: 500;
+  line-height: 1.4;
+  margin-top: 2.5em;
+  margin-bottom: 1em;
+  color: var(--page-text);
+}
+
+.content h1 {
+  font-size: 1.4em;
+}
+
+.content h2 {
+  font-size: 1.25em;
+}
+
+.content h3 {
+  font-size: 1.1em;
+}
+
+/* 列表 */
+.content ul,
+.content ol {
+  margin-bottom: 1.6em;
+  padding-left: 1.5em;
+}
+
+.content li {
+  margin-bottom: 0.5em;
+}
+
+/* 引用 - 温润的左边线 */
+.content blockquote {
+  border-left: 2px solid var(--page-accent);
+  padding-left: 1.2em;
+  margin: 2em 0;
+  color: var(--page-text-light);
+  font-style: normal;
+}
+
+/* 代码块 */
+.content pre {
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 20px 24px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 2em 0;
+  border-radius: 2px;
+}
+
+[data-theme="inner"] .content pre {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background-color: rgba(0, 0, 0, 0.04);
+  padding: 0.15em 0.4em;
+  border-radius: 2px;
+}
+
+[data-theme="inner"] .content code {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* 分隔线 */
+.content hr {
+  border: none;
+  height: 1px;
+  background-color: var(--page-text-lighter);
+  margin: 3em 0;
+  opacity: 0.2;
+}
+
+/* 链接 */
+.content a {
+  color: var(--page-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.content a:hover {
+  border-bottom-color: currentColor;
+}
+
+/* 强调 */
+.content strong {
+  font-weight: 600;
+}
+
+.content em {
+  font-style: italic;
+}
+
+/* === 图片处理 === */
+.content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2em auto;
+}
+
+/* 宽图片 - 突破容器 */
+.content figure {
+  margin: 2.5em -24px;
+}
+
+.content figure img {
+  width: 100%;
+  margin: 0;
+}
+
+.content figcaption {
+  font-size: 13px;
+  color: var(--page-text-lighter);
+  text-align: center;
+  margin-top: 12px;
+  padding: 0 24px;
+}
+
+/* === 文章底部 === */
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  text-align: center;
+}
+
+.endMark {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--page-text-lighter);
+  letter-spacing: 0.5em;
+  margin-bottom: 48px;
+  opacity: 0.6;
+}
+
+/* === 神秘水印 === */
+.watermark {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.watermarkSvg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  color: var(--page-text);
+}
+
+.watermarkSvg[data-theme="inner"] {
+  opacity: 0.04;
+}
+
+/* === 私印 Nature === */
+.seal {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+  color: var(--page-accent);
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.seal:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.sealSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.sealText {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  fill: currentColor;
+  letter-spacing: 0.05em;
+}
+
+/* === 响应式 === */
+@media (max-width: 768px) {
+  .article {
+    padding: 60px 20px 80px;
+  }
+
+  .header {
+    margin-bottom: 48px;
+  }
+
+  .content {
+    font-size: 16px;
+  }
+
+  .content figure {
+    margin: 2em -20px;
+  }
+
+  .watermark {
+    width: 80px;
+    height: 80px;
+  }
+
+  .seal {
+    width: 56px;
+    height: 56px;
+  }
+
+  .breadcrumb {
+    top: 16px;
+    left: 16px;
+  }
+}
+
+/* === 面包屑导航 === */
+.breadcrumb {
+  position: fixed;
+  top: 32px;
+  left: 32px;
+  z-index: 10;
+}
+
+.breadcrumbLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  color: var(--page-text-light);
+  text-decoration: none;
+  border: 1px solid var(--page-text-lighter);
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.breadcrumbLink:hover {
+  opacity: 1;
+  color: var(--page-accent);
+  border-color: var(--page-accent);
+}

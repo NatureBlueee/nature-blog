@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incense Smoke Playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-night: #1A1C1E;
+            --text-moon: #D6ECF0;
+            --gold-dust: #BFA37C;
+        }
+
+        body {
+            background-color: var(--bg-night);
+            color: var(--text-moon);
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 模拟里世界布局 */
+        .playground-container {
+            position: relative;
+            width: 80vw;
+            height: 80vh;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+        }
+
+        .void-area {
+            width: 60%;
+            height: 100%;
+            position: relative;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            /* 限制烟雾范围 */
+        }
+
+        .content-area {
+            width: 40%;
+            padding: 2rem;
+            opacity: 0.5;
+        }
+
+        /* --- 烟雾核心样式 --- */
+        .smoke-source {
+            position: absolute;
+            bottom: -50px;
+            /* 从底部升起 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 300px;
+            /* 初始高度 */
+            background: radial-gradient(ellipse at 50% 100%, rgba(214, 236, 240, 0.4), transparent 70%);
+            opacity: 0.8;
+            transform-origin: bottom center;
+            pointer-events: none;
+        }
+
+        /* 动画定义 */
+        @keyframes smoke-rise-slow {
+            0% {
+                transform: translateX(-50%) translateY(0) scale(1);
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateX(-50%) translateY(-100px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes smoke-rise-pure {
+            0% {
+                transform: translateX(-50%) translateY(0) scale(1);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateX(-50%) translateY(-150px) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Variant 1: Silk (青烟 - 丝滑垂直) */
+        .smoke-v1 {
+            filter: url(#filter-silk);
+            width: 60px;
+            height: 120%;
+            bottom: -20%;
+            background: linear-gradient(to top, rgba(214, 236, 240, 0) 0%, rgba(214, 236, 240, 0.3) 20%, rgba(214, 236, 240, 0) 80%);
+        }
+
+        /* Variant 2: Swirl (云篆 - 盘旋纠缠) */
+        .smoke-v2 {
+            filter: url(#filter-swirl);
+            width: 150px;
+            height: 100%;
+            bottom: -10%;
+            background: radial-gradient(circle at 50% 80%, rgba(214, 236, 240, 0.25), transparent 60%);
+        }
+
+        /* Variant 3: Steam (蒸腾 - 快速直上) */
+        .smoke-v3 {
+            filter: url(#filter-steam);
+            width: 80px;
+            height: 120%;
+            bottom: -20%;
+            background: linear-gradient(to top, rgba(214, 236, 240, 0) 0%, rgba(214, 236, 240, 0.4) 10%, transparent 90%);
+        }
+
+        /* Variant 4: Pure (纯烟 - 宽而简单，如火之烟) */
+        .smoke-v4 {
+            filter: url(#filter-pure);
+            width: 160px;
+            height: 120%;
+            bottom: -20%;
+            background: radial-gradient(ellipse at 50% 100%, rgba(214, 236, 240, 0.3), transparent 70%);
+            animation: smoke-rise-pure 8s infinite linear;
+        }
+
+        /* Variant 5: Grainy (颗粒 - 粗糙质感) */
+        .smoke-v5 {
+            filter: url(#filter-grainy);
+            width: 120px;
+            height: 110%;
+            bottom: -15%;
+            background: radial-gradient(ellipse at 50% 100%, rgba(214, 236, 240, 0.25), transparent 70%);
+            animation: smoke-rise-pure 8s infinite linear;
+        }
+
+        /* Variant 6: Original (复刻原版 - 简单蒸腾) */
+        .smoke-v6 {
+            filter: url(#filter-original);
+            width: 100px;
+            height: 110%;
+            bottom: -15%;
+            background: radial-gradient(ellipse at 50% 100%, rgba(214, 236, 240, 0.3), transparent 70%);
+            animation: smoke-rise-pure 8s infinite linear;
+        }
+
+        /* Variant 7: Real (真实 - 宽阔涌动) */
+        .smoke-v7 {
+            filter: url(#filter-real);
+            width: 160px;
+            /* 宽阔 */
+            height: 120%;
+            bottom: -20%;
+            /* 柔和的渐变 */
+            background: radial-gradient(ellipse at 50% 100%, rgba(214, 236, 240, 0.35), transparent 70%);
+            animation: smoke-rise-pure 12s infinite linear;
+            /* 较慢上升 */
+        }
+
+        /* 控制面板 */
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover,
+        button.active {
+            background: var(--gold-dust);
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG Filters -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <!-- V1: Silk (细腻拉丝) -->
+            <filter id="filter-silk">
+                <feTurbulence type="fractalNoise" baseFrequency="0.01 0.005" numOctaves="4" result="turbulence">
+                    <animate attributeName="baseFrequency" dur="20s" values="0.01 0.005; 0.01 0.008; 0.01 0.005"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="30" xChannelSelector="R"
+                    yChannelSelector="G" />
+                <feGaussianBlur stdDeviation="5" />
+            </filter>
+
+            <!-- V2: Swirl (盘旋) -->
+            <filter id="filter-swirl">
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="5" result="turbulence">
+                    <animate attributeName="baseFrequency" dur="15s" values="0.02; 0.025; 0.02"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="50" />
+                <feGaussianBlur stdDeviation="8" />
+            </filter>
+
+            <!-- V3: Steam (蒸腾) -->
+            <filter id="filter-steam">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015 0.04" numOctaves="3" result="turbulence">
+                    <animate attributeName="baseFrequency" dur="8s" values="0.015 0.04; 0.015 0.06; 0.015 0.04"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="20" />
+                <feGaussianBlur stdDeviation="4" />
+            </filter>
+
+            <!-- V4: Pure (纯烟) -->
+            <filter id="filter-pure">
+                <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="3" result="turbulence">
+                    <animate attributeName="baseFrequency" dur="15s" values="0.008; 0.01; 0.008"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="40" />
+                <feGaussianBlur stdDeviation="6" />
+            </filter>
+
+            <!-- V5: Grainy (颗粒) -->
+            <filter id="filter-grainy">
+                <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="turbulence">
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="30" />
+                <feGaussianBlur stdDeviation="0.5" />
+            </filter>
+
+            <!-- V6: Original (原版) -->
+            <filter id="filter-original">
+                <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="turbulence">
+                    <animate attributeName="baseFrequency" dur="10s" values="0.01; 0.012; 0.01"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="30" />
+                <feGaussianBlur stdDeviation="5" />
+            </filter>
+
+            <!-- V7: Real (真实) -->
+            <filter id="filter-real">
+                <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" result="turbulence">
+                    <animate attributeName="baseFrequency" dur="20s" values="0.012; 0.015; 0.012"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="40" />
+                <feGaussianBlur stdDeviation="8" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="playground-container">
+        <div class="void-area">
+            <div class="font-mono text-xs text-[#555] p-4 absolute top-0 left-0">VOID AREA (68%)</div>
+
+            <!-- 烟雾源 -->
+            <div id="smoke-target" class="smoke-source smoke-v1"></div>
+        </div>
+        <div class="content-area">
+            <h1 class="text-2xl mb-4">Incense Prototype</h1>
+            <p class="text-sm text-[#888]">Select a variant below to test the "Rising" effect.</p>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="switchSmoke('v1', this)" class="active">V1: Silk (青烟)</button>
+        <button onclick="switchSmoke('v2', this)">V2: Swirl (云篆)</button>
+        <button onclick="switchSmoke('v3', this)">V3: Steam (蒸腾)</button>
+        <button onclick="switchSmoke('v4', this)">V4: Pure (纯烟)</button>
+        <button onclick="switchSmoke('v5', this)">V5: Grainy (颗粒)</button>
+        <button onclick="switchSmoke('v6', this)">V6: Original (原版)</button>
+        <button onclick="switchSmoke('v7', this)">V7: Real (真实)</button>
+    </div>
+
+    <script>
+        function switchSmoke(version, btn) {
+            const target = document.getElementById('smoke-target');
+            // Reset classes
+            target.className = 'smoke-source';
+            // Add new class
+            target.classList.add('smoke-' + version);
+
+            // Update buttons
+            document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
