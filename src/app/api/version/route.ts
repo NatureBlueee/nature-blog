@@ -8,21 +8,12 @@
 import { Client } from "@notionhq/client";
 import { NextResponse } from "next/server";
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const DATABASE_ID = process.env.NOTION_DATABASE_ID;
+import { env } from "@/utils/env";
+
+const notion = new Client({ auth: env.NOTION_TOKEN });
+const DATABASE_ID = env.NOTION_DATABASE_ID;
 
 export async function GET() {
-  if (!DATABASE_ID) {
-    return NextResponse.json(
-      {
-        version: null,
-        success: false,
-        error: "NOTION_DATABASE_ID not configured",
-      },
-      { status: 500 }
-    );
-  }
-
   try {
     const db = await notion.databases.retrieve({ database_id: DATABASE_ID });
 

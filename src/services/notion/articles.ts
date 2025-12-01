@@ -6,16 +6,17 @@
  */
 
 import { Client } from "@notionhq/client";
+import { env } from "@/utils/env";
 import type { Language } from "@/contexts";
 
 /**
  * Notion 客户端
  */
 const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
+  auth: env.NOTION_TOKEN,
 });
 
-const DATABASE_ID = process.env.NOTION_DATABASE_ID || "";
+const DATABASE_ID = env.NOTION_DATABASE_ID;
 
 /**
  * 文章类型
@@ -94,11 +95,6 @@ function transformPageToArticle(page: any): Article {
  * 获取已发布的文章列表（只获取主文章）
  */
 export async function getArticles(): Promise<Article[]> {
-  if (!DATABASE_ID) {
-    console.warn("NOTION_DATABASE_ID not configured");
-    return [];
-  }
-
   try {
     // 先检查数据库是否有"主文章"属性
     const dbInfo = await notion.databases.retrieve({
@@ -156,11 +152,6 @@ export async function getArticlesByCategory(
   category: "理性" | "感性",
   language?: Language
 ): Promise<Article[]> {
-  if (!DATABASE_ID) {
-    console.warn("[Notion] DATABASE_ID 未配置");
-    return [];
-  }
-
   try {
     // 先尝试获取数据库信息，验证连接和属性
     const dbInfo = await notion.databases.retrieve({
