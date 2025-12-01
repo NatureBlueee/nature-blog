@@ -4,6 +4,8 @@
  * 集中管理站点的基本信息，修改配置只需改这一个文件
  */
 
+import { publicEnv } from '@/utils/env';
+
 export const siteConfig = {
   /** 站点名称 */
   name: 'natureblueee',
@@ -12,7 +14,7 @@ export const siteConfig = {
   description: '思想的数字石碑 - 一个记录光怪陆离想法与持久美学追求的空间',
 
   /** 站点 URL (部署后更新) */
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://natureblueee.vercel.app',
+  url: publicEnv.NEXT_PUBLIC_SITE_URL,
 
   /** 作者信息 */
   author: {
