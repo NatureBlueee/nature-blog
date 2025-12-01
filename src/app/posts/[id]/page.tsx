@@ -8,6 +8,10 @@
  * - 页面只负责数据层和 Next.js 特性（metadata, generateStaticParams）
  * - UI 渲染由组件负责，便于独立修改视觉层
  *
+ * SEO/GEO 优化：
+ * - 使用 generateArticleMetadata 生成完整的 SEO 元数据
+ * - 输出 JSON-LD 结构化数据便于搜索引擎和 AI 理解
+ *
  * 使用 ISR 静态生成，每 24 小时自动刷新
  * 配合 VersionChecker 实现智能更新检测
  */
@@ -16,7 +20,12 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getArticleById, getAllArticleIds } from '@/services';
 import { ArticleDetail } from '@/components/article';
-import { siteConfig } from '@/config/site';
+import {
+  seoConfig,
+  generateArticleMetadata,
+  generateArticleSchema,
+  JsonLd,
+} from '@/lib/seo';
 import { VersionChecker } from '@/components/common/VersionChecker';
 
 // ISR: 每 86400 秒（24小时）后台刷新
@@ -41,29 +50,36 @@ export async function generateStaticParams() {
 
 /**
  * 生成页面元数据
+ *
+ * 使用 SEO 工具函数生成完整的元数据
+ * 包含 Open Graph、Twitter Card、canonical URL
  */
 export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
-  const { id } = await params;
-  const article = await getArticleById(id);
+  try {
+    const { id } = await params;
+    const article = await getArticleById(id);
 
-  if (!article) {
-    return { title: '文章未找到' };
-  }
+    if (!article) {
+      return { title: '文章未找到' };
+    }
 
-  return {
-    title: article.title,
-    description: article.excerpt || `${article.title} - ${siteConfig.author.name}`,
-    openGraph: {
+    return generateArticleMetadata({
       title: article.title,
       description: article.excerpt,
-      type: 'article',
-      publishedTime: article.publishedAt,
-      authors: [siteConfig.author.name],
-      images: article.cover ? [article.cover] : [],
-    },
-  };
+      publishedAt: article.publishedAt,
+      cover: article.cover,
+      url: `${seoConfig.siteUrl}/posts/${article.id}`,
+      language: article.language,
+    });
+  } catch (error) {
+    console.warn('[Metadata] Failed to generate:', error);
+    return {
+      title: seoConfig.siteName,
+      description: seoConfig.siteDescription,
+    };
+  }
 }
 
 /**
@@ -77,8 +93,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  // 生成文章结构化数据
+  const articleSchema = generateArticleSchema({
+    title: article.title,
+    description: article.excerpt || article.title,
+    url: `${seoConfig.siteUrl}/posts/${article.id}`,
+    publishedAt: article.publishedAt,
+    cover: article.cover,
+  });
+
   return (
     <>
+      {/* JSON-LD 结构化数据 - 帮助搜索引擎和 AI 理解文章内容 */}
+      <JsonLd data={articleSchema} />
+
       {/* 版本检测：自动检测 Notion 是否有更新 */}
       <VersionChecker />
       <ArticleDetail article={article} />

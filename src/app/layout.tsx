@@ -2,22 +2,36 @@
  * 根布局组件
  *
  * 极简布局，首页使用全屏双屏设计
+ * SEO: 配置 metadataBase 和站点验证
  */
 
 import type { Metadata } from 'next';
 import { siteConfig } from '@/config/site';
+import { seoConfig } from '@/lib/seo';
 import { Providers } from '@/components/providers';
 import './globals.css';
 
 /**
  * 站点元数据
+ *
+ * metadataBase 是解决 OG 图片路径警告的必要配置
+ * verification 支持 Google/Bing 站点验证
  */
 export const metadata: Metadata = {
+  // 关键：设置 metadataBase 以正确解析相对路径
+  metadataBase: new URL(seoConfig.siteUrl),
   title: {
     default: `${siteConfig.name} | 晨曦`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  // 站点验证（从环境变量读取）
+  verification: {
+    google: seoConfig.verification?.google,
+    other: seoConfig.verification?.bing
+      ? { 'msvalidate.01': seoConfig.verification.bing }
+      : undefined,
+  },
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,
@@ -25,6 +39,10 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: 'zh_CN',
     type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
