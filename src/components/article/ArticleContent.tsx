@@ -3,22 +3,51 @@
  *
  * 渲染 Markdown 内容
  * 设计：舒适的阅读体验，思源宋体
+ * 安全：使用 DOMPurify 清洗 HTML 防止 XSS 攻击
  */
 
+import DOMPurify from "isomorphic-dompurify";
 import styles from "./styles.module.css";
 
 interface ArticleContentProps {
   content: string;
 }
 
+// XSS 防护：允许的 HTML 标签和属性
+const ALLOWED_TAGS = [
+  "p",
+  "h1",
+  "h2",
+  "h3",
+  "ul",
+  "ol",
+  "li",
+  "blockquote",
+  "pre",
+  "code",
+  "a",
+  "strong",
+  "em",
+  "br",
+  "hr",
+];
+const ALLOWED_ATTR = ["href", "class", "target", "rel"];
+
 export function ArticleContent({ content }: ArticleContentProps) {
   // 简单的 Markdown 到 HTML 转换
   const htmlContent = markdownToHtml(content);
 
+  // XSS 防护：清洗 HTML 内容
+  const cleanHtml = DOMPurify.sanitize(htmlContent, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+    ADD_ATTR: ["target"], // 允许链接 target="_blank"
+  });
+
   return (
     <div
       className={styles.content}
-      dangerouslySetInnerHTML={{ __html: htmlContent }}
+      dangerouslySetInnerHTML={{ __html: cleanHtml }}
     />
   );
 }

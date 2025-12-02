@@ -7,10 +7,11 @@
 
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { env } from "@/lib/env";
 
 export async function GET(request: NextRequest) {
   // 从环境变量获取密钥（必须配置）
-  const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;
+  const REVALIDATE_SECRET = env.REVALIDATE_SECRET;
 
   if (!REVALIDATE_SECRET) {
     return NextResponse.json(

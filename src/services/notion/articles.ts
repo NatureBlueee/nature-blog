@@ -7,15 +7,16 @@
 
 import { Client } from "@notionhq/client";
 import type { Language } from "@/contexts";
+import { env } from "@/lib/env";
 
 /**
  * Notion 客户端
  */
 const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
+  auth: env.NOTION_TOKEN,
 });
 
-const DATABASE_ID = process.env.NOTION_DATABASE_ID || "";
+const DATABASE_ID = env.NOTION_DATABASE_ID;
 
 /**
  * 文章类型
