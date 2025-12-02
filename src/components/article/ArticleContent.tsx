@@ -14,11 +14,12 @@ interface ArticleContentProps {
 export function ArticleContent({ content }: ArticleContentProps) {
   // 简单的 Markdown 到 HTML 转换
   const htmlContent = markdownToHtml(content);
+  const safeHtmlContent = sanitizeHtml(htmlContent);
 
   return (
     <div
       className={styles.content}
-      dangerouslySetInnerHTML={{ __html: htmlContent }}
+      dangerouslySetInnerHTML={{ __html: safeHtmlContent }}
     />
   );
 }
@@ -78,6 +79,81 @@ function markdownToHtml(markdown: string): string {
   processed = processed.replace(/<\/blockquote>\s*<blockquote>/g, "<br />");
 
   return processed;
+}
+
+/**
+ * 基于白名单的服务器端 HTML 清洗，阻断脚本与危险属性
+ */
+function sanitizeHtml(html: string): string {
+  if (!html) return "";
+
+  const allowedTags = new Set([
+    "p",
+    "h1",
+    "h2",
+    "h3",
+    "ul",
+    "ol",
+    "li",
+    "blockquote",
+    "pre",
+    "code",
+    "strong",
+    "em",
+    "a",
+    "hr",
+    "br",
+    "div",
+    "span",
+  ]);
+
+  const allowedAttributes = new Set([
+    "href",
+    "title",
+    "class",
+    "lang",
+    "rel",
+    "target",
+    "style",
+  ]);
+
+  // 移除脚本与样式节点
+  let sanitized = html
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "");
+
+  // 过滤事件处理器、危险的 URL 协议
+  sanitized = sanitized
+    .replace(/\son[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/javascript:/gi, "");
+
+  // 基于 rehype-sanitize 类似的白名单策略过滤标签与属性
+  sanitized = sanitized
+    // 处理起始标签
+    .replace(/<([a-z0-9-]+)([^>]*)>/gi, (match, tag, attrs) => {
+      const normalizedTag = tag.toLowerCase();
+      if (!allowedTags.has(normalizedTag)) return "";
+
+      const safeAttrs = [...attrs.matchAll(/([:\w-]+)(\s*=\s*("[^"]*"|'[^']*'|[^\s>]+))?/gi)]
+        .map(([, attr, value = ""]) => ({
+          name: attr.toLowerCase(),
+          value: value.trim(),
+        }))
+        .filter(({ name }) => allowedAttributes.has(name))
+        .map(({ name, value }) =>
+          value ? `${name}=${value}` : name
+        )
+        .join(" ");
+
+      return `<${normalizedTag}${safeAttrs ? " " + safeAttrs : ""}>`;
+    })
+    // 处理闭合标签
+    .replace(/<\/(\w+)>/gi, (match, tag) => {
+      const normalizedTag = tag.toLowerCase();
+      return allowedTags.has(normalizedTag) ? match : "";
+    });
+
+  return sanitized;
 }
 
 /**
