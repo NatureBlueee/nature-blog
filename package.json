@@ -12,10 +12,10 @@
     "@notionhq/client": "^2.2.15",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.24",
-    "isomorphic-dompurify": "^2.30.0",
     "next": "16.0.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "sanitize-html": "^2.17.0",
     "schema-dts": "^1.1.5",
     "zod": "^4.1.13"
   },
@@ -23,6 +23,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "typescript": "^5"

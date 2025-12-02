@@ -3,10 +3,10 @@
  *
  * 渲染 Markdown 内容
  * 设计：舒适的阅读体验，思源宋体
- * 安全：使用 DOMPurify 清洗 HTML 防止 XSS 攻击
+ * 安全：使用 sanitize-html 清洗 HTML 防止 XSS 攻击
  */
 
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 import styles from "./styles.module.css";
 
 interface ArticleContentProps {
@@ -37,11 +37,24 @@ export function ArticleContent({ content }: ArticleContentProps) {
   // 简单的 Markdown 到 HTML 转换
   const htmlContent = markdownToHtml(content);
 
-  // XSS 防护：清洗 HTML 内容
-  const cleanHtml = DOMPurify.sanitize(htmlContent, {
-    ALLOWED_TAGS,
-    ALLOWED_ATTR,
-    ADD_ATTR: ["target"], // 允许链接 target="_blank"
+  // XSS 防护：使用 sanitize-html 清洗 HTML 内容
+  const cleanHtml = sanitizeHtml(htmlContent, {
+    allowedTags: ALLOWED_TAGS,
+    allowedAttributes: {
+      "*": ALLOWED_ATTR,
+    },
+    // 保证 target="_blank" 的链接带上安全的 rel
+    transformTags: {
+      a: (tagName, attribs) => ({
+        tagName,
+        attribs: {
+          ...attribs,
+          ...(attribs.target === "_blank"
+            ? { rel: "noopener noreferrer" }
+            : {}),
+        },
+      }),
+    },
   });
 
   return (

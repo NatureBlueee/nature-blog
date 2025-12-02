@@ -20,23 +20,25 @@ const DATABASE_ID = env.NOTION_DATABASE_ID;
 // 速率限制配置
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 分钟
 const MAX_REQUESTS = 30; // 每分钟最多 30 次
-const ipRequestMap = new Map<
-  string,
-  { count: number; resetTime: number }
->();
+const ipRequestMap = new Map<string, { count: number; resetTime: number }>();
 
 /**
  * 获取客户端 IP 地址
  */
 function getClientIP(request: NextRequest): string {
   const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded && forwarded.length > 0) {
+    // 形如 "ip1, ip2, ip3" 取第一个即可
+    return forwarded.split(",")[0]!.trim();
+  }
+
   const realIP = request.headers.get("x-real-ip");
-  return (
-    forwarded?.split(",")[0]?.trim() ||
-    realIP ||
-    request.ip ||
-    "unknown"
-  );
+  if (realIP && realIP.length > 0) {
+    return realIP;
+  }
+
+  // 在本地或某些运行环境下可能拿不到 IP，用占位符
+  return "unknown";
 }
 
 /**
