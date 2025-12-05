@@ -10,7 +10,7 @@
     "seo:check": "npx tsx scripts/seo-check.ts"
   },
   "dependencies": {
-    "@notionhq/client": "^2.2.15",
+    "@notionhq/client": "^5.4.0",
     "dotenv": "^17.2.3",
     "feed": "^4.2.2",
     "framer-motion": "^12.23.24",
