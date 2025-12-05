@@ -98,6 +98,61 @@ VersionChecker 检测版本（<100ms）
 
 ---
 
+### SEO/GEO 自动化系统
+
+博客内置完整的 SEO 和 GEO（生成式引擎优化）系统，专为搜索引擎和 AI 爬虫优化。
+
+#### Feed 订阅
+
+| 格式 | 端点 | 用途 |
+|------|------|------|
+| RSS 2.0 | `/feed.xml` | 传统阅读器订阅 |
+| Atom 1.0 | `/atom.xml` | 国际化支持更好 |
+| JSON Feed | `/feed.json` | 现代 API 友好格式 |
+
+#### 结构化数据 (JSON-LD)
+
+| Schema 类型 | 应用页面 | 用途 |
+|-------------|----------|------|
+| `WebSite` | 首页 | 网站整体信息 |
+| `Blog` | 首页 | 博客描述 |
+| `Person` | 首页 | 作者信息 |
+| `BlogPosting` | 文章详情 | 博客文章内容 |
+| `BreadcrumbList` | 所有内页 | 导航层级 |
+| `CollectionPage` | 文章列表 | 文章集合 |
+
+#### GEO（AI 爬虫优化）
+
+- **llms.txt**：专为 AI 爬虫设计的网站说明文件 (`/llms.txt`)
+- **robots.txt**：明确允许 14 种主流 AI 爬虫访问
+  - GPTBot (OpenAI/ChatGPT)
+  - ClaudeBot (Anthropic/Claude)
+  - PerplexityBot (Perplexity AI)
+  - Google-Extended (Google Gemini)
+  - 以及更多...
+
+#### 多语言 SEO
+
+- **hreflang 标签**：自动生成中英文版本关联
+- **x-default**：默认语言指向中文版
+- **Canonical URL**：规范链接防止重复索引
+
+#### SEO 健康检查
+
+```bash
+npm run seo:check
+```
+
+自动检查 19 项 SEO 配置，包括：
+- 核心 SEO 文件完整性
+- Feed 生成状态
+- AI 爬虫规则
+- 结构化数据类型
+- 多语言配置
+- 环境变量
+
+---
+
 ### 文章列表交互
 
 #### 展开逻辑

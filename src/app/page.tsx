@@ -24,6 +24,7 @@ import { VersionChecker } from "@/components/common/VersionChecker";
 import {
   generateWebSiteSchema,
   generatePersonSchema,
+  generateBlogSchema,
   JsonLd,
 } from "@/lib/seo";
 
@@ -49,12 +50,14 @@ export default async function HomePage() {
   // 生成结构化数据
   const webSiteSchema = generateWebSiteSchema();
   const personSchema = generatePersonSchema();
+  const blogSchema = generateBlogSchema();
 
   return (
     <>
       {/* JSON-LD 结构化数据 - 帮助搜索引擎和 AI 理解网站信息 */}
       <JsonLd data={webSiteSchema} />
       <JsonLd data={personSchema} />
+      <JsonLd data={blogSchema} />
 
       {/* 版本检测：自动检测 Notion 是否有更新 */}
       <VersionChecker />

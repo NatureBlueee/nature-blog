@@ -107,3 +107,39 @@ export interface ArticleSchemaInput {
   /** 封面图片 URL */
   cover?: string;
 }
+
+/**
+ * 博客文章结构化数据输入（增强版）
+ */
+export interface BlogPostingSchemaInput extends ArticleSchemaInput {
+  /** 文章分类 */
+  category?: string;
+  /** 文章内容（用于计算字数） */
+  content?: string;
+  /** 语言 */
+  language?: 'zh' | 'en';
+}
+
+/**
+ * 面包屑导航项
+ */
+export interface BreadcrumbItem {
+  /** 名称 */
+  name: string;
+  /** URL */
+  url: string;
+}
+
+/**
+ * 文章集合页结构化数据输入
+ */
+export interface CollectionPageSchemaInput {
+  /** 页面标题 */
+  title: string;
+  /** 页面描述 */
+  description: string;
+  /** 页面 URL */
+  url: string;
+  /** 文章数量 */
+  numberOfItems?: number;
+}

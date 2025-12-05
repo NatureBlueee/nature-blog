@@ -9,47 +9,45 @@
  * - ClaudeBot (Anthropic/Claude)
  * - PerplexityBot (Perplexity AI)
  * - Google-Extended (Google Gemini)
+ * - 以及更多 AI 爬虫...
+ *
+ * 参考: https://platform.openai.com/docs/gptbot
  */
 
 import type { MetadataRoute } from 'next';
 import { seoConfig } from '@/lib/seo';
+import { aiCrawlers } from '@/lib/seo/geo';
 
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = seoConfig.siteUrl;
 
+  // 为每个 AI 爬虫生成规则
+  const aiRules: MetadataRoute.Robots['rules'] = aiCrawlers.map((crawler) => ({
+    userAgent: crawler.name,
+    allow: [
+      '/',
+      '/feed.xml',      // RSS Feed
+      '/atom.xml',      // Atom Feed
+      '/feed.json',     // JSON Feed
+      '/llms.txt',      // AI 专用说明
+      '/sitemap.xml',   // 站点地图
+    ],
+    disallow: ['/api/'],
+  }));
+
   return {
     rules: [
       {
-        // 允许所有搜索引擎爬虫（包括 Googlebot、Bingbot 等）
+        // 允许所有搜索引擎爬虫
         userAgent: '*',
         allow: '/',
         disallow: ['/api/', '/_next/'],
       },
-      {
-        // 明确允许 GPTBot (OpenAI/ChatGPT)
-        userAgent: 'GPTBot',
-        allow: '/',
-        disallow: ['/api/'],
-      },
-      {
-        // 明确允许 ClaudeBot (Anthropic/Claude)
-        userAgent: 'ClaudeBot',
-        allow: '/',
-        disallow: ['/api/'],
-      },
-      {
-        // 明确允许 PerplexityBot
-        userAgent: 'PerplexityBot',
-        allow: '/',
-        disallow: ['/api/'],
-      },
-      {
-        // 明确允许 Google-Extended (Gemini)
-        userAgent: 'Google-Extended',
-        allow: '/',
-        disallow: ['/api/'],
-      },
+      // 所有 AI 爬虫规则
+      ...aiRules,
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
+    // 扩展配置：添加主机和额外链接
+    host: baseUrl,
   };
 }
