@@ -25,6 +25,12 @@ export function SmokeFilters() {
           <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="10" />
           <feGaussianBlur stdDeviation="2" />
         </filter>
+
+        {/* 通用噪点：用于墨迹纹理 */}
+        <filter id="noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
       </defs>
     </svg>
   );

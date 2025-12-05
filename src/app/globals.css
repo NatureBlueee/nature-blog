@@ -49,7 +49,7 @@
   font-weight: 600; /* 稍重，如碑刻 */
 }
 
-/* === 优化动画：朱砂呼吸 (Cinnabar Pulse) === */
+  /* === 优化动画：朱砂呼吸 (Cinnabar Pulse) === */
 @keyframes pulse-cinnabar {
   0%, 100% {
     opacity: 0.8;
@@ -63,6 +63,58 @@
 
 .animate-pulse-cinnabar {
   animation: pulse-cinnabar 4s ease-in-out infinite;
+}
+
+/* === 优化动画：流体浮动 (Fluid Float) === */
+@keyframes float-phase-1 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes float-phase-2 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes float-phase-3 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.animate-float-1 { animation: float-phase-1 6s ease-in-out infinite; }
+.animate-float-2 { animation: float-phase-2 7s ease-in-out infinite; animation-delay: 1s; }
+.animate-float-3 { animation: float-phase-3 8s ease-in-out infinite; animation-delay: 2s; }
+
+/* === 优化工具类：大气景深 (Atmospheric Depth) === */
+.blur-depth {
+  filter: blur(0.5px);
+  transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0.85;
+}
+.blur-depth:hover {
+  filter: blur(0);
+  opacity: 1;
+  transform: scale(1.02); /* 轻微推开感 */
+}
+
+/* === 优化工具类：墨迹纹理 (Ink Texture Overlay) === */
+.text-ink-texture {
+  position: relative;
+  color: transparent; /* 隐藏原文字 */
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(to bottom, #d6ecf0, #a8c0c4); /* 月白渐变 */
+}
+.text-ink-texture::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #d6ecf0;
+  mix-blend-mode: overlay;
+  filter: url(#noise); /* 假设已有 noise filter，或利用 backdrop-filter */
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* === 基础重置 === */
@@ -371,7 +423,7 @@ body.hovering .custom-cursor {
   }
 }
 
-/* 烟雾分割线 */
+/* === 烟雾分割线 === */
 .divider-smoke-container {
   position: absolute;
   top: 0;
@@ -382,23 +434,40 @@ body.hovering .custom-cursor {
   overflow: hidden;
   pointer-events: none;
   z-index: 10;
+  transition: left 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .divider-smoke-line {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: -100%; /* 起始位置更高，以便向下移动（背景向上移动效果） */
+  bottom: -100%;
   left: 50%;
   width: 2px;
-  background: linear-gradient(
-    to bottom,
+  /* 使用重复线性渐变模拟连续的烟雾条纹 */
+  background: repeating-linear-gradient(
+    to top,
     transparent 0%,
-    rgba(230, 232, 235, 0.5) 20%,
-    rgba(230, 232, 235, 0.2) 80%,
-    transparent 100%
+    rgba(230, 232, 235, 0.0) 10%,
+    rgba(230, 232, 235, 0.8) 25%, /* 增加不透明度 */
+    rgba(230, 232, 235, 0.0) 40%,
+    transparent 50%
   );
-  opacity: 0.7;
+  background-size: 100% 50%; /* 两个循环 */
+  animation: smoke-rise-continuous 15s linear infinite; /* 减慢速度 (8s -> 15s) */
+  opacity: 0.9; /* 提高整体不透明度 */
   filter: url(#smoke-line-flow);
+}
+
+@keyframes smoke-rise-continuous {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); } /* 向上移动半个高度，实现无缝循环 */
+}
+
+/* === 虚空影像交互 (Void Image Interaction) === */
+/* 移除旧的全局 hover 样式，改用内联样式控制局部遮罩 */
+.void-image-layer {
+  transition: opacity 0.5s ease;
+  will-change: mask-image;
 }
 
 /* === Drift Layout（乱中有序） === */

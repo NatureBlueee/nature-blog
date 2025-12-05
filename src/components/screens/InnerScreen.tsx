@@ -86,6 +86,7 @@ export function InnerScreen({ articles }: InnerScreenProps) {
       </div>
 
       {/* 左侧：虚空 - 点击可收起展开的文章 */}
+      {/* 左侧：虚空 - 点击可收起展开的文章 */}
       <aside
         className="void-area hidden md:flex"
         onClick={handleVoidClick}
@@ -93,8 +94,26 @@ export function InnerScreen({ articles }: InnerScreenProps) {
           justifyContent: "flex-end",
           alignItems: "flex-start",
           cursor: hasExpanded ? "pointer" : "default",
+          position: "relative",
         }}
       >
+        {/* 背景纹理图片 (静态) */}
+        <img
+          src="/nature_All_our_life_is_composed_of_four_elements_each_differing_3d563b58-53cf-4cd0-b5f9-79d90beb49e9.png"
+          alt="Void Texture"
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: "50%",
+            width: "70%",
+            height: "auto",
+            transform: "translateX(-50%)",
+            opacity: 0.3,
+            mixBlendMode: "screen",
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+        />
         {/* 语言切换已移除，只在第一屏显示 */}
       </aside>
 
