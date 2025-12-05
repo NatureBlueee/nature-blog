@@ -423,7 +423,7 @@ body.hovering .custom-cursor {
   }
 }
 
-/* 烟雾分割线 */
+/* === 烟雾分割线 === */
 .divider-smoke-container {
   position: absolute;
   top: 0;
@@ -434,23 +434,40 @@ body.hovering .custom-cursor {
   overflow: hidden;
   pointer-events: none;
   z-index: 10;
+  transition: left 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .divider-smoke-line {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: -100%; /* 起始位置更高，以便向下移动（背景向上移动效果） */
+  bottom: -100%;
   left: 50%;
   width: 2px;
-  background: linear-gradient(
-    to bottom,
+  /* 使用重复线性渐变模拟连续的烟雾条纹 */
+  background: repeating-linear-gradient(
+    to top,
     transparent 0%,
-    rgba(230, 232, 235, 0.5) 20%,
-    rgba(230, 232, 235, 0.2) 80%,
-    transparent 100%
+    rgba(230, 232, 235, 0.0) 10%,
+    rgba(230, 232, 235, 0.8) 25%, /* 增加不透明度 */
+    rgba(230, 232, 235, 0.0) 40%,
+    transparent 50%
   );
-  opacity: 0.7;
+  background-size: 100% 50%; /* 两个循环 */
+  animation: smoke-rise-continuous 15s linear infinite; /* 减慢速度 (8s -> 15s) */
+  opacity: 0.9; /* 提高整体不透明度 */
   filter: url(#smoke-line-flow);
+}
+
+@keyframes smoke-rise-continuous {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); } /* 向上移动半个高度，实现无缝循环 */
+}
+
+/* === 虚空影像交互 (Void Image Interaction) === */
+/* 移除旧的全局 hover 样式，改用内联样式控制局部遮罩 */
+.void-image-layer {
+  transition: opacity 0.5s ease;
+  will-change: mask-image;
 }
 
 /* === Drift Layout（乱中有序） === */
