@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 
 interface MysticalWatermarkProps {
@@ -56,48 +56,82 @@ function getStableRandom(seed: number): number {
 }
 
 export function MysticalWatermark({ theme }: MysticalWatermarkProps) {
-  // 使用 useMemo 生成稳定的随机值，避免 hydration mismatch
-  // 服务端和客户端都使用相同的默认值
-  const { symbolKey, position } = useMemo(() => {
-    // 使用组件挂载时的时间戳作为种子（仅在客户端有效）
-    const seed = typeof window !== 'undefined' ? Date.now() : 0;
-    const random1 = getStableRandom(seed);
-    const random2 = getStableRandom(seed + 1);
-    const random3 = getStableRandom(seed + 2);
+  const [watermarks, setWatermarks] = useState<{ id: number; symbolKey: keyof typeof SYMBOLS; position: { top: number; left?: number; right?: number }; rotation: number; scale: number }[]>([]);
+
+  useEffect(() => {
+    // 1. 准备符号池并打乱 (Fisher-Yates Shuffle)
+    const shuffledKeys = [...SYMBOL_KEYS];
+    for (let i = shuffledKeys.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledKeys[i], shuffledKeys[j]] = [shuffledKeys[j], shuffledKeys[i]];
+    }
+
+    // 2. 定义区域系统 (Zone System)
+    // 将文章高度分为 4 个区域，每个区域放置一个水印
+    const ZONE_COUNT = 4;
+    const newWatermarks = [];
+
+    for (let i = 0; i < ZONE_COUNT; i++) {
+      // 区域高度范围
+      const zoneStart = (i / ZONE_COUNT) * 100;
+      const zoneHeight = 100 / ZONE_COUNT;
+      
+      // 在区域内随机垂直位置 (留出 10% 边距避免贴边)
+      const topPos = zoneStart + 10 + Math.random() * (zoneHeight - 20);
+
+      // 水平位置：交替分布 (左 -> 右 -> 左 -> 右)
+      // 偶数在左，奇数在右
+      const isLeft = i % 2 === 0;
+      
+      // 边缘距离：5% - 15%
+      const edgeDist = 5 + Math.random() * 10;
+
+      newWatermarks.push({
+        id: i,
+        symbolKey: shuffledKeys[i % shuffledKeys.length] ?? 'sol',
+        position: {
+          top: topPos,
+          [isLeft ? 'left' : 'right']: edgeDist,
+        },
+        rotation: (Math.random() - 0.5) * 40, // -20 到 20 度
+        scale: 0.8 + Math.random() * 0.5, // 0.8 - 1.3 倍
+      });
+    }
     
-    const index = Math.floor(random1 * SYMBOL_KEYS.length);
-    return {
-      symbolKey: SYMBOL_KEYS[index] ?? 'sol',
-      position: {
-        bottom: 10 + random2 * 15,
-        right: 5 + random3 * 10,
-      },
-    };
+    setWatermarks(newWatermarks);
   }, []);
 
-  const path = SYMBOLS[symbolKey];
+  if (watermarks.length === 0) return null;
 
   return (
-    <div
-      className={styles.watermark}
-      style={{
-        bottom: `${position.bottom}%`,
-        right: `${position.right}%`,
-      }}
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="0.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={styles.watermarkSvg}
-        data-theme={theme}
-      >
-        <path d={path} />
-      </svg>
-    </div>
+    <>
+      {watermarks.map((wm) => (
+        <div
+          key={wm.id}
+          className={styles.watermark}
+          style={{
+            top: `${wm.position.top}%`,
+            left: wm.position.left ? `${wm.position.left}%` : 'auto',
+            right: wm.position.right ? `${wm.position.right}%` : 'auto',
+            transform: `rotate(${wm.rotation}deg) scale(${wm.scale})`,
+          }}
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={styles.watermarkSvg}
+            data-theme={theme}
+            style={{ filter: 'url(#ancient-seal)' }}
+          >
+            <path d={SYMBOLS[wm.symbolKey]} />
+          </svg>
+        </div>
+      ))}
+    </>
   );
 }
