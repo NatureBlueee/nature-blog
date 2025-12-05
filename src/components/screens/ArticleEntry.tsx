@@ -72,8 +72,14 @@ export function ArticleEntry({
     }
   };
 
+  // 计算浮动动画类 (仅里世界)
+  // 用户反馈：移除 blur-depth 以保持文字清晰
+  const floatClass = !isSurface
+    ? `animate-float-${(index % 3) + 1}`
+    : "";
+
   return (
-    <article className={`article-item group ${isSurface ? "" : ""}`}>
+    <article className={`article-item group ${isSurface ? "" : ""} ${floatClass}`}>
       {/* 日期行 */}
       <div
         className="font-mono"
@@ -97,7 +103,8 @@ export function ArticleEntry({
       {/* 标题 - 点击展开/跳转 */}
       <h2
         onClick={handleTitleClick}
-        className="entry-title hover-target"
+        className={`entry-title hover-target ${!isSurface ? "text-ink-texture" : ""}`}
+        data-text={article.title}
         style={{
           fontSize: isSurface ? "1.5rem" : "1.875rem",
           fontWeight: isSurface ? 500 : 300,

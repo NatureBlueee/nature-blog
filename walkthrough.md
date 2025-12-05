@@ -1,27 +1,43 @@
-# Surface Screen Optimization Walkthrough
+# Aesthetic Optimization Walkthrough
 
-## Changes Implemented
+## Surface Screen (表世界)
 
 ### 1. Rice Paper / Plaster Texture (宣纸/泥墙质感)
-*   **File**: `src/app/globals.css`, `src/components/screens/SurfaceScreen.tsx`
-*   **Detail**: Replaced `.bg-grid-pattern` with `.bg-paper-texture`.
-*   **Technique**: Used dual SVG filters:
-    *   High-frequency noise (`baseFrequency='0.8'`) for paper fibers.
-    *   Low-frequency turbulence (`baseFrequency='0.02'`) for wall/plaster unevenness.
-*   **Effect**: Creates a subtle, organic texture that feels like "material" rather than "digital white".
+*   **Technique**: Procedural SVG filters (Noise + Turbulence).
+*   **Effect**: Subtle, organic material feel.
 
 ### 2. Architectural Typography (金石气排印)
-*   **File**: `src/app/globals.css`, `src/components/screens/SurfaceScreen.tsx`
-*   **Detail**: Added `.text-architectural` with `0.8em` letter-spacing and ink-bleed text shadow.
-*   **Effect**: Transforms text into "monuments" or "ink on paper".
+*   **Technique**: Wide letter-spacing + Ink bleed shadow.
+*   **Effect**: Monumental, inscribed look.
 
 ### 3. Cinnabar Pulse (朱砂呼吸)
-*   **File**: `src/app/globals.css`, `src/components/screens/SurfaceScreen.tsx`
-*   **Detail**: Added `@keyframes pulse-cinnabar` and applied it to the red accent line.
-*   **Effect**: Introduces a slow, organic "breath" to the rational structure.
+*   **Technique**: CSS Keyframe Animation.
+*   **Effect**: Organic life-force indication.
+
+## Inner Screen (里世界)
+
+### 1. Left Void Image (虚空影像)
+*   **File**: `src/components/screens/InnerScreen.tsx`
+*   **Detail**: Added the "Buddha/Water" silhouette image to the left void area.
+*   **Technique**: `mix-blend-mode: screen`, `opacity: 0.3`.
+*   **Effect**: A ghostly, spiritual presence in the void.
+
+### 2. Fluid Typography (流体浮动)
+*   **File**: `src/app/globals.css`, `src/components/screens/ArticleEntry.tsx`
+*   **Detail**: Articles float up and down with different phases (`float-phase-1/2/3`).
+*   **Effect**: Text feels suspended in liquid or smoke.
+
+### 3. Atmospheric Depth (大气景深)
+*   **File**: `src/app/globals.css`, `src/components/screens/ArticleEntry.tsx`
+*   **Detail**: Unfocused articles have `blur(0.5px)`. Hovering brings them into focus.
+*   **Effect**: Simulates looking through a dense atmosphere.
+
+### 4. Ink Texture Overlay (墨迹纹理)
+*   **File**: `src/app/globals.css`, `src/components/common/SmokeFilters.tsx`
+*   **Detail**: Titles have a granular texture using `background-clip: text` and an SVG `#noise` filter overlay.
+*   **Effect**: Text looks like it's written with dissolving ink.
 
 ## Verification Checklist
 
-- [x] **Texture**: SVG filter applied to left void area.
-- [x] **Typography**: New class created and applied to Logo/Signature.
-- [x] **Animation**: Keyframes defined and applied to the accent line.
+- [x] **Surface**: Texture, Typo, Pulse.
+- [x] **Inner**: Image Overlay, Float, Blur, Ink Texture.
