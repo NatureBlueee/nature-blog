@@ -30,8 +30,13 @@ const ALLOWED_TAGS = [
   "em",
   "br",
   "hr",
+  "u",      // 下划线
+  "del",    // 删除线
+  "img",    // 图片
+  "figure", // 图片容器
+  "figcaption", // 图片说明
 ];
-const ALLOWED_ATTR = ["href", "class", "target", "rel"];
+const ALLOWED_ATTR = ["href", "class", "target", "rel", "src", "alt", "loading"];
 
 export function ArticleContent({ content }: ArticleContentProps) {
   // 简单的 Markdown 到 HTML 转换
@@ -89,6 +94,16 @@ function markdownToHtml(markdown: string): string {
   // 处理列表（需要特殊处理以支持多行）
   processed = processLists(processed);
 
+  // 处理图片（在其他转换之前）
+  processed = processed.replace(
+    /!\[([^\]]*)\]\(([^)]+)\)/g,
+    (_, alt, src) => {
+      // 只有当 alt 文本有意义时才显示 figcaption
+      const caption = alt && alt !== "image" ? `<figcaption>${alt}</figcaption>` : "";
+      return `<figure><img src="${src}" alt="${alt || ''}" loading="lazy" />${caption}</figure>`;
+    }
+  );
+
   // 其他 Markdown 转换
   processed = processed
     // 行内代码
@@ -101,6 +116,8 @@ function markdownToHtml(markdown: string): string {
     .replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>")
     // 分隔线
     .replace(/^---$/gm, "<hr />")
+    // 删除线
+    .replace(/~~([^~]+)~~/g, "<del>$1</del>")
     // 粗体
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     // 斜体
@@ -175,6 +192,7 @@ function processParagraphs(text: string): string {
         block.startsWith("<blockquote") ||
         block.startsWith("<pre") ||
         block.startsWith("<hr") ||
+        block.startsWith("<figure") ||
         block.startsWith("__CODE_BLOCK")
       ) {
         return block;

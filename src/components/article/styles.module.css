@@ -176,6 +176,18 @@
   font-style: italic;
 }
 
+/* 下划线 */
+.content u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* 删除线 */
+.content del {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
 /* === 图片处理 === */
 .content img {
   max-width: 100%;
@@ -200,6 +212,11 @@
   text-align: center;
   margin-top: 12px;
   padding: 0 24px;
+}
+
+/* 隐藏空的图片说明 */
+.content figcaption:empty {
+  display: none;
 }
 
 /* === 文章底部 === */
