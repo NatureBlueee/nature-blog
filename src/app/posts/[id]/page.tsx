@@ -23,7 +23,8 @@ import { ArticleDetail } from '@/components/article';
 import {
   seoConfig,
   generateArticleMetadata,
-  generateArticleSchema,
+  generateBlogPostingSchema,
+  generateBreadcrumbSchema,
   JsonLd,
 } from '@/lib/seo';
 import { VersionChecker } from '@/components/common/VersionChecker';
@@ -93,19 +94,32 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  // 生成文章结构化数据
-  const articleSchema = generateArticleSchema({
+  const articleUrl = `${seoConfig.siteUrl}/posts/${article.id}`;
+
+  // 生成博客文章结构化数据（BlogPosting 比 Article 更适合博客）
+  const blogPostingSchema = generateBlogPostingSchema({
     title: article.title,
     description: article.excerpt || article.title,
-    url: `${seoConfig.siteUrl}/posts/${article.id}`,
+    url: articleUrl,
     publishedAt: article.publishedAt,
     cover: article.cover,
+    category: article.category,
+    content: article.content,
+    language: article.language,
   });
+
+  // 生成面包屑导航结构化数据
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: '首页', url: seoConfig.siteUrl },
+    { name: '文章', url: `${seoConfig.siteUrl}/posts` },
+    { name: article.title, url: articleUrl },
+  ]);
 
   return (
     <>
       {/* JSON-LD 结构化数据 - 帮助搜索引擎和 AI 理解文章内容 */}
-      <JsonLd data={articleSchema} />
+      <JsonLd data={blogPostingSchema} />
+      <JsonLd data={breadcrumbSchema} />
 
       {/* 版本检测：自动检测 Notion 是否有更新 */}
       <VersionChecker />
