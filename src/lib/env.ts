@@ -10,11 +10,21 @@ import { z } from "zod";
 const envSchema = z.object({
   NOTION_TOKEN: z.string().min(1, "NOTION_TOKEN is required"),
   NOTION_DATABASE_ID: z.string().min(1, "NOTION_DATABASE_ID is required"),
+  // REVALIDATE_SECRET 是可选的，但如果提供则必须至少16字符
+  // 空字符串会被转换为 undefined
   REVALIDATE_SECRET: z
     .string()
-    .min(16, "REVALIDATE_SECRET must be at least 16 characters")
-    .optional(),
-  NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
+    .transform((val) => (val === "" ? undefined : val))
+    .pipe(
+      z
+        .string()
+        .min(16, "REVALIDATE_SECRET must be at least 16 characters")
+        .optional()
+    ),
+  NEXT_PUBLIC_SITE_URL: z
+    .string()
+    .transform((val) => (val === "" ? undefined : val))
+    .pipe(z.string().url().optional()),
 });
 
 /**
