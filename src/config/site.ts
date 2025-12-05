@@ -11,8 +11,8 @@ export const siteConfig = {
   /** 站点描述 - 用于 SEO 和社交分享 */
   description: '思想的数字石碑 - 一个记录光怪陆离想法与持久美学追求的空间',
 
-  /** 站点 URL (部署后更新) */
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://natureblueee.vercel.app',
+  /** 站点 URL */
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://natureblueee.com',
 
   /** 作者信息 */
   author: {
