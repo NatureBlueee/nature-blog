@@ -67,7 +67,7 @@ BING_SITE_VERIFICATION=your-bing-verification-code
 export const seoConfig: SEOConfig = {
   siteName: 'natureblueee',
   siteDescription: '思想的数字石碑 - ...',
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://natureblueee.vercel.app',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://natureblueee.com',
   defaultLocale: 'zh-CN',
   author: {
     name: 'Natureblueee',
@@ -100,7 +100,7 @@ import { generatePageMetadata, JsonLd, generatePersonSchema } from '@/lib/seo';
 export const metadata = generatePageMetadata({
   title: '关于我',
   description: '了解更多关于 Natureblueee 的信息',
-  url: 'https://natureblueee.vercel.app/about',
+  url: 'https://natureblueee.com/about',
 });
 
 export default function AboutPage() {

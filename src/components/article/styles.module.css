@@ -176,6 +176,58 @@
   font-style: italic;
 }
 
+/* 下划线 */
+.content u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* 删除线 */
+.content del {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* 表格 (GFM) */
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2em 0;
+  font-size: 0.95em;
+}
+
+.content th,
+.content td {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.75em 1em;
+  text-align: left;
+}
+
+.content th {
+  background-color: rgba(0, 0, 0, 0.02);
+  font-weight: 600;
+}
+
+[data-theme="inner"] .content th,
+[data-theme="inner"] .content td {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="inner"] .content th {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* 任务列表 (GFM) */
+.content ul:has(input[type="checkbox"]) {
+  list-style: none;
+  padding-left: 0;
+}
+
+.content input[type="checkbox"] {
+  margin-right: 0.5em;
+  accent-color: var(--page-accent);
+}
+
 /* === 图片处理 === */
 .content img {
   max-width: 100%;
@@ -200,6 +252,11 @@
   text-align: center;
   margin-top: 12px;
   padding: 0 24px;
+}
+
+/* 隐藏空的图片说明 */
+.content figcaption:empty {
+  display: none;
 }
 
 /* === 文章底部 === */

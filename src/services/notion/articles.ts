@@ -45,6 +45,57 @@ function extractText(richText: any[] | undefined): string {
 }
 
 /**
+ * 将 Notion RichText 转换为 Markdown（保留格式）
+ *
+ * 支持：粗体、斜体、删除线、行内代码、链接、下划线
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function richTextToMarkdown(richText: any[] | undefined): string {
+  if (!richText) return "";
+
+  return richText
+    .map((t) => {
+      let text = t.plain_text || "";
+      if (!text) return "";
+
+      const annotations = t.annotations || {};
+
+      // 行内代码优先处理（不与其他格式混合）
+      if (annotations.code) {
+        return `\`${text}\``;
+      }
+
+      // 链接
+      if (t.href) {
+        text = `[${text}](${t.href})`;
+      }
+
+      // 粗体
+      if (annotations.bold) {
+        text = `**${text}**`;
+      }
+
+      // 斜体
+      if (annotations.italic) {
+        text = `*${text}*`;
+      }
+
+      // 删除线
+      if (annotations.strikethrough) {
+        text = `~~${text}~~`;
+      }
+
+      // 下划线（Markdown 不原生支持，使用 HTML）
+      if (annotations.underline) {
+        text = `<u>${text}</u>`;
+      }
+
+      return text;
+    })
+    .join("");
+}
+
+/**
  * 将 Notion Page 转换为 Article
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -318,7 +369,9 @@ export async function getAllArticleIds(): Promise<string[]> {
 }
 
 /**
- * 将 Notion Blocks 转换为 Markdown（简化版）
+ * 将 Notion Blocks 转换为 Markdown
+ *
+ * 支持富文本格式：粗体、斜体、链接、代码等
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function blocksToMarkdown(blocks: any[]): string {
@@ -328,25 +381,59 @@ function blocksToMarkdown(blocks: any[]): string {
 
       switch (block.type) {
         case "paragraph":
-          return extractText(block.paragraph?.rich_text) + "\n\n";
+          return richTextToMarkdown(block.paragraph?.rich_text) + "\n\n";
         case "heading_1":
-          return "# " + extractText(block.heading_1?.rich_text) + "\n\n";
+          return "# " + richTextToMarkdown(block.heading_1?.rich_text) + "\n\n";
         case "heading_2":
-          return "## " + extractText(block.heading_2?.rich_text) + "\n\n";
+          return "## " + richTextToMarkdown(block.heading_2?.rich_text) + "\n\n";
         case "heading_3":
-          return "### " + extractText(block.heading_3?.rich_text) + "\n\n";
+          return "### " + richTextToMarkdown(block.heading_3?.rich_text) + "\n\n";
         case "bulleted_list_item":
-          return "- " + extractText(block.bulleted_list_item?.rich_text) + "\n";
+          return "- " + richTextToMarkdown(block.bulleted_list_item?.rich_text) + "\n";
         case "numbered_list_item":
           return (
-            "1. " + extractText(block.numbered_list_item?.rich_text) + "\n"
+            "1. " + richTextToMarkdown(block.numbered_list_item?.rich_text) + "\n"
           );
         case "quote":
-          return "> " + extractText(block.quote?.rich_text) + "\n\n";
-        case "code":
-          return "```\n" + extractText(block.code?.rich_text) + "\n```\n\n";
+          return "> " + richTextToMarkdown(block.quote?.rich_text) + "\n\n";
+        case "code": {
+          // 代码块使用纯文本，不处理格式
+          const language = block.code?.language || "";
+          return "```" + language + "\n" + extractText(block.code?.rich_text) + "\n```\n\n";
+        }
         case "divider":
           return "---\n\n";
+        case "image": {
+          // 图片支持
+          let imageUrl = "";
+          if (block.image?.type === "external") {
+            imageUrl = block.image.external?.url || "";
+          } else if (block.image?.type === "file") {
+            imageUrl = block.image.file?.url || "";
+          }
+          const caption = extractText(block.image?.caption);
+          if (imageUrl) {
+            return `![${caption || "image"}](${imageUrl})\n\n`;
+          }
+          return "";
+        }
+        case "callout": {
+          // 提示框转为引用
+          const icon = block.callout?.icon?.emoji || "💡";
+          const text = richTextToMarkdown(block.callout?.rich_text);
+          return `> ${icon} ${text}\n\n`;
+        }
+        case "toggle": {
+          // 折叠块转为标题+内容
+          const summary = richTextToMarkdown(block.toggle?.rich_text);
+          return `**${summary}**\n\n`;
+        }
+        case "bookmark": {
+          // 书签转为链接
+          const url = block.bookmark?.url || "";
+          const caption = extractText(block.bookmark?.caption) || url;
+          return `[${caption}](${url})\n\n`;
+        }
         default:
           return "";
       }

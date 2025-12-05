@@ -5,8 +5,11 @@
  * 只获取数据库的 last_edited_time，非常快（<100ms）
  *
  * 安全措施：
- * - 速率限制：每分钟最多 30 次请求
+ * - 速率限制：每分钟最多 30 次请求（每实例）
  * - 版本信息模糊化：返回 hash 而非原始时间戳
+ *
+ * 注意：内存速率限制在 Serverless 环境下是每实例独立的。
+ * 对于个人博客这是可接受的，如需严格限制请使用 Redis/Upstash。
  */
 
 import { Client } from "@notionhq/client";

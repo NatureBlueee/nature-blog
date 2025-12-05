@@ -126,7 +126,7 @@ export const seoConfig: SEOConfig = {
   siteName: "natureblueee",
   siteDescription: "思想的数字石碑 - 一个记录光怪陆离想法与持久美学追求的空间",
   siteUrl:
-    process.env.NEXT_PUBLIC_SITE_URL || "https://natureblueee.vercel.app",
+    process.env.NEXT_PUBLIC_SITE_URL || "https://natureblueee.com",
   defaultLocale: "zh-CN",
   author: {
     name: "Natureblueee",
@@ -788,7 +788,7 @@ export function SEOPreview({ metadata }: { metadata: Metadata }) {
 
 ```env
 # .env.local
-NEXT_PUBLIC_SITE_URL=https://natureblueee.vercel.app
+NEXT_PUBLIC_SITE_URL=https://natureblueee.com
 
 # 可选：站点验证
 GOOGLE_SITE_VERIFICATION=your-google-verification-code
