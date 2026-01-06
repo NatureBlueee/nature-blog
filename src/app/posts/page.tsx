@@ -23,6 +23,9 @@ import styles from "./page.module.css";
 export const metadata: Metadata = {
   title: "文章",
   description: `${siteConfig.author.name} 的文章列表`,
+  alternates: {
+    canonical: `${siteConfig.url}/posts`,
+  },
 };
 
 export default async function PostsPage() {

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // 统一 URL 格式，避免重定向问题
+  trailingSlash: false,
   // 图片域名白名单（Notion S3 和官方域名）
   images: {
     remotePatterns: [

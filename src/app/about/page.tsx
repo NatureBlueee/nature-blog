@@ -9,6 +9,9 @@ import styles from './page.module.css';
 export const metadata: Metadata = {
   title: '关于',
   description: `关于 ${siteConfig.author.name}`,
+  alternates: {
+    canonical: `${siteConfig.url}/about`,
+  },
 };
 
 export default function AboutPage() {

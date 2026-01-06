@@ -63,7 +63,7 @@ export function MysticalWatermark({ theme }: MysticalWatermarkProps) {
     const shuffledKeys = [...SYMBOL_KEYS];
     for (let i = shuffledKeys.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffledKeys[i], shuffledKeys[j]] = [shuffledKeys[j], shuffledKeys[i]];
+      [shuffledKeys[i], shuffledKeys[j]] = [shuffledKeys[j]!, shuffledKeys[i]!];
     }
 
     // 2. 定义区域系统 (Zone System)

@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  alternates: {
+    canonical: seoConfig.siteUrl,
+  },
   // 站点验证（从环境变量读取）
   verification: {
     google: seoConfig.verification?.google,
