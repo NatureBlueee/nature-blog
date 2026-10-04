@@ -65,14 +65,20 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
  * 常量时间字符串比较，防止时序攻击
  */
 function secureCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) {
+  const aBuffer = Buffer.from(a);
+  const bBuffer = Buffer.from(b);
+
+  if (aBuffer.length !== bBuffer.length) {
     // 长度不同时仍执行比较，避免泄露长度信息
-    const dummyA = Buffer.from(a.padEnd(64, "\0"));
-    const dummyB = Buffer.from(b.padEnd(64, "\0"));
+    const length = Math.max(aBuffer.length, bBuffer.length, 64);
+    const dummyA = Buffer.alloc(length);
+    const dummyB = Buffer.alloc(length);
+    aBuffer.copy(dummyA);
+    bBuffer.copy(dummyB);
     timingSafeEqual(dummyA, dummyB);
     return false;
   }
-  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+  return timingSafeEqual(aBuffer, bBuffer);
 }
 
 /**
@@ -128,6 +134,9 @@ async function handleRevalidate(request: NextRequest) {
     revalidatePath("/");
     revalidatePath("/posts/[id]", "page");
     revalidatePath("/posts");
+    for (const path of ["/feed.xml", "/atom.xml", "/feed.json", "/sitemap.xml", "/llms.txt"]) {
+      revalidatePath(path);
+    }
 
     return NextResponse.json({
       success: true,

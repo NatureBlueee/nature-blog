@@ -23,7 +23,11 @@ export default function AboutPage() {
 
       <section className={styles.content}>
         <p className={styles.paragraph}>
-          我是 {siteConfig.author.name}。
+          我是 {siteConfig.author.name}，通向惊喜创始人，研究自主智能体与 RSI。
+        </p>
+        <p className={styles.paragraph}>
+          我自研 Flowness，探索 AI 的自主工作与自我改进。
+          服务上市公司及多家年营收数亿元企业。
         </p>
         <p className={styles.paragraph}>
           这个网站是我的数字石碑，用来记录那些光怪陆离的想法和持久的美学追求。
@@ -33,11 +37,13 @@ export default function AboutPage() {
         </p>
 
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>技术栈</h2>
+          <h2 className={styles.sectionTitle}>项目与联系</h2>
           <ul className={styles.list}>
-            <li>内容管理：Notion</li>
-            <li>前端框架：Next.js 16</li>
-            <li>部署平台：Vercel</li>
+            <li><a href={siteConfig.author.projectUrl}>Flowness 研究与实践</a> · AI 的自主工作与自我改进</li>
+            <li><a href="https://github.com/Towow-ai/jpp">J++</a> · 语言与运行时实验</li>
+            <li><a href="https://github.com/Towow-ai/totype">Totype</a> · 语音输入</li>
+            <li><a href={siteConfig.social.github}>GitHub</a> · 项目与代码</li>
+            <li><a href={`mailto:${siteConfig.author.email}`}>{siteConfig.author.email}</a></li>
           </ul>
         </div>
       </section>

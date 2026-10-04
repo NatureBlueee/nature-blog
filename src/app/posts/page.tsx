@@ -20,6 +20,8 @@ import {
 } from "@/lib/seo";
 import styles from "./page.module.css";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "文章",
   description: `${siteConfig.author.name} 的文章列表`,

@@ -1,0 +1,56 @@
+name: Blog CI
+
+on:
+  push:
+    branches: ['main', 'ci/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: blog-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      - name: Save the verified production build
+        run: |
+          tar --exclude=.next/cache -czf blog-build.tar.gz .next public package.json package-lock.json next.config.ts scripts/smoke.mjs
+          sha256sum blog-build.tar.gz > blog-build.sha256
+          printf '%s\n' "$GITHUB_SHA" > source-commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blog-build-${{ github.sha }}
+          path: |
+            blog-build.tar.gz
+            blog-build.sha256
+            source-commit.txt
+          retention-days: 7
+          if-no-files-found: error
+
+  consumer:
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: blog-build-${{ github.sha }}
+      - run: sha256sum -c blog-build.sha256 && tar -xzf blog-build.tar.gz
+      - run: npm ci --omit=dev
+      - run: npm run smoke

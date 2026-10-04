@@ -6,6 +6,7 @@
  */
 
 import type { SEOConfig } from './types';
+import { siteConfig } from '@/config/site';
 
 /**
  * SEO 配置
@@ -21,8 +22,8 @@ export const seoConfig: SEOConfig = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://natureblueee.com',
   defaultLocale: 'zh-CN',
   author: {
-    name: 'Natureblueee',
-    url: 'https://wowok.net',
+    name: siteConfig.author.name,
+    url: `${siteConfig.url}/about`,
   },
   ogImage: {
     width: 1200,

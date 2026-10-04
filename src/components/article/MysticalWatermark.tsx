@@ -49,56 +49,66 @@ const SYMBOLS = {
 
 const SYMBOL_KEYS = Object.keys(SYMBOLS) as (keyof typeof SYMBOLS)[];
 
-// 简单的伪随机生成器，基于时间戳生成稳定的随机值
-function getStableRandom(seed: number): number {
-  const x = Math.sin(seed) * 10000;
-  return x - Math.floor(x);
+type Watermark = {
+  id: number;
+  symbolKey: keyof typeof SYMBOLS;
+  position: { top: number; left?: number; right?: number };
+  rotation: number;
+  scale: number;
+};
+
+function createWatermarks(): Watermark[] {
+  // 1. 准备符号池并打乱 (Fisher-Yates Shuffle)
+  const shuffledKeys = [...SYMBOL_KEYS];
+  for (let i = shuffledKeys.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledKeys[i], shuffledKeys[j]] = [shuffledKeys[j]!, shuffledKeys[i]!];
+  }
+
+  // 2. 定义区域系统 (Zone System)
+  // 将文章高度分为 4 个区域，每个区域放置一个水印
+  const ZONE_COUNT = 4;
+  const nextWatermarks: Watermark[] = [];
+
+  for (let i = 0; i < ZONE_COUNT; i++) {
+    // 区域高度范围
+    const zoneStart = (i / ZONE_COUNT) * 100;
+    const zoneHeight = 100 / ZONE_COUNT;
+
+    // 在区域内随机垂直位置 (留出 10% 边距避免贴边)
+    const topPos = zoneStart + 10 + Math.random() * (zoneHeight - 20);
+
+    // 水平位置：交替分布 (左 -> 右 -> 左 -> 右)
+    // 偶数在左，奇数在右
+    const isLeft = i % 2 === 0;
+
+    // 边缘距离：5% - 15%
+    const edgeDist = 5 + Math.random() * 10;
+
+    nextWatermarks.push({
+      id: i,
+      symbolKey: shuffledKeys[i % shuffledKeys.length] ?? 'sol',
+      position: {
+        top: topPos,
+        [isLeft ? 'left' : 'right']: edgeDist,
+      },
+      rotation: (Math.random() - 0.5) * 40, // -20 到 20 度
+      scale: 0.8 + Math.random() * 0.5, // 0.8 - 1.3 倍
+    });
+  }
+
+  return nextWatermarks;
 }
 
 export function MysticalWatermark({ theme }: MysticalWatermarkProps) {
-  const [watermarks, setWatermarks] = useState<{ id: number; symbolKey: keyof typeof SYMBOLS; position: { top: number; left?: number; right?: number }; rotation: number; scale: number }[]>([]);
+  const [watermarks, setWatermarks] = useState<Watermark[]>([]);
 
   useEffect(() => {
-    // 1. 准备符号池并打乱 (Fisher-Yates Shuffle)
-    const shuffledKeys = [...SYMBOL_KEYS];
-    for (let i = shuffledKeys.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledKeys[i], shuffledKeys[j]] = [shuffledKeys[j]!, shuffledKeys[i]!];
-    }
+    const frameId = window.requestAnimationFrame(() => {
+      setWatermarks(createWatermarks());
+    });
 
-    // 2. 定义区域系统 (Zone System)
-    // 将文章高度分为 4 个区域，每个区域放置一个水印
-    const ZONE_COUNT = 4;
-    const newWatermarks = [];
-
-    for (let i = 0; i < ZONE_COUNT; i++) {
-      // 区域高度范围
-      const zoneStart = (i / ZONE_COUNT) * 100;
-      const zoneHeight = 100 / ZONE_COUNT;
-      
-      // 在区域内随机垂直位置 (留出 10% 边距避免贴边)
-      const topPos = zoneStart + 10 + Math.random() * (zoneHeight - 20);
-
-      // 水平位置：交替分布 (左 -> 右 -> 左 -> 右)
-      // 偶数在左，奇数在右
-      const isLeft = i % 2 === 0;
-      
-      // 边缘距离：5% - 15%
-      const edgeDist = 5 + Math.random() * 10;
-
-      newWatermarks.push({
-        id: i,
-        symbolKey: shuffledKeys[i % shuffledKeys.length] ?? 'sol',
-        position: {
-          top: topPos,
-          [isLeft ? 'left' : 'right']: edgeDist,
-        },
-        rotation: (Math.random() - 0.5) * 40, // -20 到 20 度
-        scale: 0.8 + Math.random() * 0.5, // 0.8 - 1.3 倍
-      });
-    }
-    
-    setWatermarks(newWatermarks);
+    return () => window.cancelAnimationFrame(frameId);
   }, []);
 
   if (watermarks.length === 0) return null;
