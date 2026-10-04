@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Legacy side project. Stabilization work only covers the root blog app.
+    "digital-desktop/**",
   ]),
   // Custom rules
   {

@@ -7,6 +7,12 @@
   margin: 0 auto;
 }
 
+@media (max-width: 720px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+}
+
 .header {
   margin-bottom: var(--spacing-2xl, 3rem);
 }

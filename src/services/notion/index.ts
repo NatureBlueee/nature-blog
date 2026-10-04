@@ -10,4 +10,5 @@ export {
   getRelatedArticle,
   getAllArticleIds,
 } from './articles';
-export type { Article } from './articles';
+export { getNotionStatus } from './client';
+export type { Article, ArticleCategory, NotionStatus } from './types';

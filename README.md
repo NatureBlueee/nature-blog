@@ -148,3 +148,7 @@ src/
 ## 📄 许可证
 
 MIT License © 2024 [张晨曦 / Nature](mailto:hi@natureblueee.com)
+
+## Development and delivery
+
+Run `npm ci` and `npm run verify` on Node.js 22. The same checks run in GitHub Actions, followed by an independent consumer check of the saved production build. Commands, artifacts, failure diagnosis and release boundaries are maintained in [the operations runbook](docs/operations/RUNBOOK.md).

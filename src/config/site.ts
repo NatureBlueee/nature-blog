@@ -16,14 +16,16 @@ export const siteConfig = {
 
   /** 作者信息 */
   author: {
-    name: 'Natureblueee',
+    name: '张晨曦（Nature）',
     handle: 'Natureblueee',
+    email: 'hi@natureblueee.com',
+    projectUrl: 'https://towow.net/articles/topics/harness-engineering-progress',
   },
 
   /** 社交链接 (可选扩展) */
   social: {
     // twitter: '',
-    // github: '',
+    github: 'https://github.com/NatureBlueee',
   },
 
   /** 导航链接 */

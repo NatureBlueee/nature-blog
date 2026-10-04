@@ -12,13 +12,9 @@
  * 对于个人博客这是可接受的，如需严格限制请使用 Redis/Upstash。
  */
 
-import { Client } from "@notionhq/client";
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
-import { env } from "@/lib/env";
-
-const notion = new Client({ auth: env.NOTION_TOKEN });
-const DATABASE_ID = env.NOTION_DATABASE_ID;
+import { createNotionClient } from "@/services/notion/client";
 
 // 速率限制配置
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 分钟
@@ -97,8 +93,20 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const db = await notion.databases.retrieve({
-      database_id: DATABASE_ID,
+    const client = createNotionClient();
+    if (!client.configured) {
+      return NextResponse.json(
+        {
+          version: null,
+          success: false,
+          error: "Notion is not configured.",
+        },
+        { status: 503 }
+      );
+    }
+
+    const db = await client.notion.databases.retrieve({
+      database_id: client.databaseId,
     });
 
     // 检查是否是完整的数据库响应（包含 last_edited_time）

@@ -8,7 +8,7 @@
 import styles from './styles.module.css';
 
 export function NatureSeal() {
-  const email = 'hello@natureblueee.com'; // 可以改成实际邮箱
+  const email = 'hi@natureblueee.com';
 
   return (
     <a

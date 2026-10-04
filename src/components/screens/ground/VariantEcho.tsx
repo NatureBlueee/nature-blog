@@ -694,10 +694,11 @@ export function VariantEcho() {
         {/* ===== "八"字布局：内凹曲线，从中上向两侧下方展开 ===== */}
 
         {/* 左撇 - 内凹曲线：顶部靠中心，中部向内弯，底部向外 */}
-        {/* 碎片 C: wowok (左撇顶部，靠近中心) */}
+        {/* 项目入口 (左撇顶部，靠近中心) */}
         <motion.a
-          href="https://wowok.net"
+          href="https://towow.net/articles/topics/harness-engineering-progress"
           target="_blank"
+          rel="noopener noreferrer"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 0.85 }}
           transition={{ delay: 0.3, duration: 1.5, ease: "easeInOut" }}
@@ -718,10 +719,10 @@ export function VariantEcho() {
             transform: "rotate(-15deg)",
           }}
         >
-          wowok.net
+          Flowness
         </motion.a>
 
-        {/* 碎片 A: 北京 (左撇中部，内凹向右靠) */}
+        {/* 创业身份 (左撇中部，内凹向右靠) */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 0.75 }}
@@ -739,10 +740,10 @@ export function VariantEcho() {
             transform: "rotate(-3deg)",
           }}
         >
-          {t("北京 · 大四在读", "Beijing · Senior Year")}
+          {t("通向惊喜创始人", "Founder · 通向惊喜")}
         </motion.div>
 
-        {/* 碎片 B: NEU (左撇底部，向外展开) */}
+        {/* 研究与工程 (左撇底部，向外展开) */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 0.6 }}
@@ -760,7 +761,7 @@ export function VariantEcho() {
             transform: "rotate(2deg)",
           }}
         >
-          NEU 26 Fall
+          {t("自主智能体 · RSI", "Autonomous Agents · RSI")}
         </motion.div>
 
         {/* 右捺 - 内凹曲线：顶部靠中心，中部向内弯，底部向外 */}
